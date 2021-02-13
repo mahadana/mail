@@ -3,13 +3,13 @@
 set -euo pipefail
 
 if test -z "${MAIL_RELAY_HOST+x}"; then
-  echo "Routing mail locally to root (MAIL_RELAY_* not set)"
+  echo "Routing mail locally to root (MAIL_RELAY_* not set)..."
   perl -pi -e "s/^(virtual_alias_domain =).*$/\\1 */" /etc/postfix/main.cf
   perl -pi -e "s/^(relayhost =).*$/\\1/" /etc/postfix/main.cf
   echo "/^/ root@localhost" > /etc/postfix/virtual_alias
   echo "" > /etc/postfix/sasl_password
 else
-  echo "Relaying mail to $MAIL_RELAY_HOST"
+  echo "Relaying mail to $MAIL_RELAY_HOST..."
   perl -pi -e "s/^(virtual_alias_domain =).*$/\\1/" /etc/postfix/main.cf
   perl -pi -e "s/^(relayhost =).*$/\\1 [$MAIL_RELAY_HOST]:$MAIL_RELAY_PORT/" /etc/postfix/main.cf
   echo "" > /etc/postfix/virtual_alias
