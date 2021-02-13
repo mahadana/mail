@@ -1,0 +1,7 @@
+version: "3"
+
+services:
+  mail:
+    build: .
+    env_file: .env
+    restart: unless-stopped
