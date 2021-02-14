@@ -29,7 +29,7 @@ docker-compose exec mail mail
 ## Forward emails
 
 To forward emails to an outgoing email relay (e.g., Gmail, Mailgun, etc.),
-configre your `docker-compose.yml` as follows:
+configure your `docker-compose.yml` as follows:
 
 ```
 version: "3"

@@ -2,14 +2,19 @@
 
 set -euo pipefail
 
+if [ $# -gt 0 ]; then
+  exec "$@"
+  exit 0
+fi
+
 if test -z "${MAIL_RELAY_HOST+x}"; then
-  echo "Routing mail locally to root (MAIL_RELAY_* not set)"
+  msg="routing mail locally (MAIL_RELAY_* not set)"
   perl -pi -e "s/^(virtual_alias_domain =).*$/\\1 */" /etc/postfix/main.cf
   perl -pi -e "s/^(relayhost =).*$/\\1/" /etc/postfix/main.cf
   echo "/^/ root@localhost" > /etc/postfix/virtual_alias
   echo "" > /etc/postfix/sasl_password
 else
-  echo "Relaying mail to $MAIL_RELAY_HOST"
+  msg="relaying mail to $MAIL_RELAY_HOST:$MAIL_RELAY_PORT"
   perl -pi -e "s/^(virtual_alias_domain =).*$/\\1/" /etc/postfix/main.cf
   perl -pi -e "s/^(relayhost =).*$/\\1 [$MAIL_RELAY_HOST]:$MAIL_RELAY_PORT/" /etc/postfix/main.cf
   echo "" > /etc/postfix/virtual_alias
@@ -24,10 +29,6 @@ cp /etc/resolv.conf /var/spool/postfix/etc/resolv.conf
 rm -f /run/rsyslogd.pid
 ln -sf /proc/$$/fd/1 /var/log/all.log
 
-if [ $# -gt 0 ]; then
-  exec "$@"
-  exit 0
-fi
-
 postfix start
+nohup bash -c "sleep 1; logger '$msg'" > /dev/null 2>&1 &
 rsyslogd -n
