@@ -13,7 +13,7 @@ version: "3"
 
 services:
   mail:
-    image: mahadana/mail
+    image: ghcr.io/mahadana/mail
     restart: unless-stopped
 ```
 
@@ -36,7 +36,7 @@ version: "3"
 
 services:
   mail:
-    image: mahadana/mail
+    image: ghcr.io/mahadana/mail
     environment:
       MAIL_RELAY_HOST: smtp.server.com
       MAIL_RELAY_PORT: 587
